@@ -12,23 +12,30 @@ public class interactions : MonoBehaviour
     [SerializeField]private GameObject winCanvas;
     [SerializeField] private GameObject PlayerHUD;
     public move3d playerMovemntScript;
-    // public move2D PlayerMove2D;
-    // [SerializeField] private GameObject cmCam2d;
     [SerializeField] private GameObject endGoalHintCam;
     [SerializeField] private TextMeshProUGUI Pscore;     //Text variables grant us access to those objects' Text components
     private int Pcount;
-    public int HP = 5;
-    [SerializeField] private TextMeshProUGUI playerHP;
+    public float HP = 1.0f;
+    //healthbar vars
+    [SerializeField] private Image HPBar;
+    [SerializeField] private GameObject getGun;
 
 
     private void Start()
     {
         Pscore.text = ("0");
+        getGun.SetActive(false);
     }
 
     private void Update()
     {
         Pscore.text = ("20/" + Pcount);
+        HPBar.fillAmount = HP;
+
+        if (HP < 0.0f)
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,7 +46,7 @@ public class interactions : MonoBehaviour
             winCanvas.SetActive(true);
         }
 
-        if (other.gameObject.CompareTag("powerUp"))
+        if (other.gameObject.CompareTag("powerUp") || other.gameObject.CompareTag("SpecialPowerUp"))
         {
             playerMovemntScript.jumpHeight ++;
             playerMovemntScript.Playerspeed++;
@@ -66,12 +73,16 @@ public class interactions : MonoBehaviour
             Destroy(other.gameObject);
         }
 
-        // if (other.gameObject.CompareTag("enemyview"))
-        // {
-        //     cmCam2d.SetActive(true);
-        //     playerMovemntScript.enabled = false;
-        //     PlayerMove2D.enabled = true;
-        // }
+        if (other.gameObject.CompareTag("Respawn"))
+        {
+            SceneManager.LoadScene(0);
+        }
+
+        if (other.CompareTag("gunBox"))
+        {
+            getGun.SetActive(true);
+            Destroy(other.gameObject);
+        }
     }
 
     void disableEndGoalHint()
