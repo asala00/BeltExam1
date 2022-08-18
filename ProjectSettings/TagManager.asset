@@ -6,6 +6,10 @@ TagManager:
   tags:
   - win
   - powerUp
+  - gunBox
+  - enemyview
+  - hazard
+  - SpecialPowerUp
   layers:
   - Default
   - TransparentFX
