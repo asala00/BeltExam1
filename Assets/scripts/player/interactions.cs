@@ -10,24 +10,32 @@ using UnityEngine.SceneManagement;
 public class interactions : MonoBehaviour
 {
     [SerializeField]private GameObject winCanvas;
+    [SerializeField] private GameObject PlayerHUD;
     public move3d playerMovemntScript;
-    public move2D PlayerMove2D;
-    [SerializeField] private GameObject cmCam2d;
-    void Start()
+    // public move2D PlayerMove2D;
+    // [SerializeField] private GameObject cmCam2d;
+    [SerializeField] private GameObject endGoalHintCam;
+    [SerializeField] private TextMeshProUGUI Pscore;     //Text variables grant us access to those objects' Text components
+    private int Pcount;
+    public int HP = 5;
+    [SerializeField] private TextMeshProUGUI playerHP;
+
+
+    private void Start()
     {
-        // PlayerMove2D.enabled = false;
+        Pscore.text = ("0");
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        Pscore.text = ("20/" + Pcount);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("win"))
         {
+            PlayerHUD.SetActive(false);
             winCanvas.SetActive(true);
         }
 
@@ -35,6 +43,7 @@ public class interactions : MonoBehaviour
         {
             playerMovemntScript.jumpHeight ++;
             playerMovemntScript.Playerspeed++;
+            Pcount++;
             Destroy(other.gameObject);
         }
 
@@ -50,11 +59,23 @@ public class interactions : MonoBehaviour
             SceneManager.LoadScene(0);
         }
 
+        if (other.gameObject.CompareTag("camChange"))
+        {
+            endGoalHintCam.SetActive(true);
+            Invoke("disableEndGoalHint",4);
+            Destroy(other.gameObject);
+        }
+
         // if (other.gameObject.CompareTag("enemyview"))
         // {
         //     cmCam2d.SetActive(true);
         //     playerMovemntScript.enabled = false;
         //     PlayerMove2D.enabled = true;
         // }
+    }
+
+    void disableEndGoalHint()
+    {
+        endGoalHintCam.SetActive(false);
     }
 }
